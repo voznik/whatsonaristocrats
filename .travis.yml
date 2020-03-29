@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+  - 10
+branches:
+  only:
+    - master
+script:
+  - cd functions
+  - npm ci
+  - npm run lint
+  # - npm run test
+  - cd ..
+deploy:
+  provider: firebase
+  project: what-s-on-aristocrats
+  token:
+    secure: $FIREBASE_TOKEN
+  skip_cleanup: true
