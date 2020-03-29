@@ -1,12 +1,20 @@
 {
   "compilerOptions": {
+    "resolveJsonModule": true,
+    "skipDefaultLibCheck": true,
+    "esModuleInterop": true,
     "module": "commonjs",
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "outDir": "lib",
     "sourceMap": true,
     "strict": true,
-    "target": "es2017"
+    "target": "es2017",
+    "typeRoots": ["./node_modules/@types"],
+    "types": [
+      "jest",
+      "node"
+    ]
   },
   "compileOnSave": true,
   "include": ["src"],

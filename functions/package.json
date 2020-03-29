@@ -31,14 +31,15 @@
     "jest": "^25.1.0",
     "ts-jest": "^25.2.1",
     "tslint": "^6.1.0",
-    "typescript": "^3.5.3"
+    "typescript": "3.7.4"
   },
   "private": true,
   "jest": {
     "preset": "ts-jest",
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.spec.json"
+        "tsConfig": "tsconfig.spec.json",
+        "diagnostics": false
       }
     }
   }

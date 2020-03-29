@@ -7,8 +7,19 @@ import { getMessage } from './helpers';
 
 const WELCOME_INTENT = 'Default Welcome Intent';
 const STATION_INTENT = 'Station Number';
-
 const app = dialogflow({ debug: true });
+
+app.middleware(conv => {
+  if (!!conv.data) {
+    // Convert array of facts to map
+    console.log({ data: conv.data });
+  }
+});
+// The following example shows a simple catch error handler that sends the error to console output and sends back a simple string response to prompt the user via the conv.ask() function:
+app.catch((conv, error) => {
+  console.error(error);
+  conv.ask('I encountered a glitch. Can you say that again?');
+});
 // you can add a fallback function instead of a function for individual intents
 app.fallback(async conv => {
   // intent contains the name of the intent
@@ -31,18 +42,13 @@ app.fallback(async conv => {
   }
 });
 
-/* export const _nowplaying = functions.https.onCall(async (data = {}, context) => {
-  const station = data['station'] || AStations.Aristocrats;
-  const res = await fetchAristocratsApi(station);
-  return {
-    message: getMessage(res),
-  };
-}); */
-
 async function handler(station = Station.Aristocrats) {
   const res = await fetchAristocratsApi(station);
   const message = getMessage(res);
   return message;
 }
 
+// The entry point to handle a http request
 export const nowplaying = functions.https.onRequest(app);
+// For testing purposes
+export const testApp = app;

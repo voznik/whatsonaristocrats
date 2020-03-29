@@ -1,9 +1,11 @@
-// "test": "TS_NODE_PROJECT='./tsconfig.spec.json' mocha -r ts-node/register --reporter spec test/**/*spec.ts"
-import 'jest';
+// tslint: disable: no-unused;
+// tslint:disable-next-line: no-import-side-effect
+// import '@types/jest';
 import * as admin from 'firebase-admin';
 import functionsTest from 'firebase-functions-test';
 import { FeaturesList } from 'firebase-functions-test/lib/features';
-import { nowplaying } from '../src';
+import { nowplaying, testApp } from '../src';
+import { NowPlayingInfo } from '../src/models';
 
 describe('test nowplaying api', () => {
   let features: FeaturesList;
@@ -30,9 +32,42 @@ describe('test nowplaying api', () => {
     features.cleanup();
   });
 
-  it('should return undefined titles', async () => {
-    // const wrapped = features.wrap(nowplaying);
-    // const result = await wrapped({});
-    // expect(result.message).toEqual(`It's "" by `);
+  it('Default Welcome Intent', async () => {
+    const { body } = await testApp(
+      {
+        inputs: [
+          {
+            intent: 'actions.intent.MAIN',
+          },
+        ],
+      },
+      {}
+    );
+    expect(body.payload.google.richResponse.items.length).toBeGreaterThan(0);
+    expect(
+      body.payload.google.richResponse.items[0].simpleResponse.textToSpeech
+    ).toMatch("It's");
   });
+
+  /* it('should return undefined titles', async done => {
+    // [START assertHTTP]
+    // A fake request object, with req.query.text set to 'input'
+    const req = {};
+    // A fake response object, with a stubbed redirect function which asserts that it is called
+    // with parameters 303, 'new_ref'.
+    const res = {
+      send: jest.fn(() => {
+        const data = new NowPlayingInfo();
+        // expect(res.send).toHaveBeenCalled();
+        done();
+      }),
+    };
+
+    // Invoke addMessage with our fake request and response objects. This will cause the
+    // assertions in the response object to be evaluated.
+    const info = await nowplaying({} as any, {} as any);
+    expect(res.send).toHaveBeenCalled();
+    // done();
+    // [END assertHTTP]
+  }); */
 });
