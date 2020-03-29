@@ -9,10 +9,9 @@ before_script:
   - npm install -g firebase-tools
   - cd functions && npm ci
 script:
-  - cd functions
-  - npm ci
   - npm run lint
   - npm run test
+  - cd ..
 after_success:
   - firebase deploy --force --only functions --token $FIREBASE_TOKEN
 
