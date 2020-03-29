@@ -13,6 +13,6 @@ script:
 deploy:
   provider: firebase
   project: what-s-on-aristocrats
-  token:
-    secure: $FIREBASE_TOKEN
+  only: functions
+  token: $FIREBASE_TOKEN
   skip_cleanup: true
