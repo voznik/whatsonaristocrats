@@ -12,6 +12,7 @@ script:
   - cd ..
 deploy:
   provider: firebase
+  edge: true
   project: what-s-on-aristocrats
   only: functions
   token: $FIREBASE_TOKEN
