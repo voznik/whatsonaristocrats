@@ -15,4 +15,3 @@ deploy:
   project: what-s-on-aristocrats
   only: functions
   token: $FIREBASE_TOKEN
-  skip_cleanup: true
