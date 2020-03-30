@@ -1,40 +1,41 @@
 import * as functions from 'firebase-functions';
 import { dialogflow } from 'actions-on-google';
+import i18n from 'i18n';
 
-import { isEmptyObject } from './helpers';
+import * as INTENT from './constants/intent';
 import { Station } from './models';
 import { fetchAristocratsApi } from './services';
 
-const WELCOME_INTENT = 'Default Welcome Intent';
-const STATION_INTENT = 'Station Number';
+i18n.configure({
+  locales: ['en-US', 'ru-RU'],
+  directory: __dirname + '/locales',
+  defaultLocale: 'en-US',
+});
+
 const app = dialogflow({ debug: true });
 
 app.middleware(conv => {
-  if (!isEmptyObject(conv.data)) {
-    // Convert array of facts to map
-    console.log(`DEBUG: 'conv.data'`, conv.data);
-  }
+  i18n.setLocale(conv.user.locale);
 });
 // The following example shows a simple catch error handler that sends the error to console output and sends back a simple string response to prompt the user via the conv.ask() function:
 app.catch((conv, error) => {
   console.error({ error });
-  conv.ask('I encountered a glitch. Can you say that again?');
+  conv.ask(i18n.__('ERROR'));
 });
 // you can add a fallback function instead of a function for individual intents
 app.fallback(async conv => {
   // intent contains the name of the intent
   // you defined in the Intents area of Dialogflow
-  const intent = conv.intent;
-  let message = `There is nothing playing at the moment. You can check again later.
-  Thank you!`;
+  const { intent, parameters } = conv;
+  let message;
   switch (intent) {
-    case WELCOME_INTENT:
-      message = await handler();
+    case INTENT.WELCOME_INTENT:
+      message = await handler(parameters.station as Station);
       conv.close(message);
       break;
-    case STATION_INTENT:
-      message = await handler();
-      conv.ask('What station are you listening');
+    case INTENT.STATION_INTENT:
+      message = await handler(parameters.station as Station);
+      conv.ask();
       break;
     default:
       message = await handler();

@@ -1,8 +1,9 @@
+import i18n from 'i18n';
 import { parseTitleBy, isEmptyString } from '../helpers';
 
 export class NowPlayingInfo {
-  artist = undefined;
-  song = undefined;
+  artist = '';
+  song = '';
 
   constructor(xmlData?: any) {
     if (xmlData) {
@@ -12,8 +13,11 @@ export class NowPlayingInfo {
   }
 
   getMessage() {
-    return isEmptyString(this.artist) || isEmptyString(this.song)
-      ? `There is nothing playing at the moment. You can check again later. Thank you!`
-      : `It's "${this.song}" by ${this.artist}`;
+    // var example = i18n.__('%2$d then %1$s then %3$.2f', 'First', 2, 333.333);
+    const message =
+      isEmptyString(this.artist) || isEmptyString(this.song)
+        ? i18n.__('MESSAGE_EMPTY')
+        : i18n.__('MESSAGE', { song: this.song, artist: this.artist });
+    return message;
   }
 }
