@@ -44,6 +44,7 @@ app.fallback(async conv => {
 async function handler(station = Station.Aristocrats) {
   const res = await fetchAristocratsApi(station);
   const message = res.getMessage();
+  console.log('DEBUG: handler -> message', message);
   return message;
 }
 

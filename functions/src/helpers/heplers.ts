@@ -67,7 +67,8 @@ export function pick(o: any, ...fields: string[]) {
 }
 
 export function parseTitleBy(rawData: any, key: 'artist' | 'song') {
-  return get(['Playlist', key, '0', '$', 'title'], rawData);
+  // return get(['Playlist', key, '0', '$', 'title'], rawData);
+  return rawData.Playlist[key][0]['$']['title'];
 }
 
 export function getMessage(data: NowPlayingInfo) {
