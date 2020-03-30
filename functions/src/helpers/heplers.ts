@@ -40,30 +40,17 @@ export function isEmptyString(value: any) {
   return isUndefined(value) || (isString(value) && !value.length);
 }
 
-/**
- * @description get nested property
- * @param p
- * @param o
- * @tutorial https://glebbahmutov.com/blog/call-me-maybe/
- */
-export function get(keys: string | string[], o: any) {
-  // tslint:disable-next-line: no-parameter-reassignment
-  keys = isArray(keys) ? keys : keys.split('.');
-  return keys.reduce((xs, x) => (xs && xs[x] ? xs[x] : null), o);
-}
-
-/**
- * @tutorial https://stackoverflow.com/a/25835337/4115894
- * @param o Object
- * @param fields []
- */
-export function pick(o: any, ...fields: string[]) {
-  return fields.reduce((a, x) => {
-    if (o.hasOwnProperty(x)) {
-      a[x] = o[x];
+export function isEmptyObject(obj: any, deep = false) {
+  if (!isObject(obj)) {
+    return true;
+  } else {
+    if (Object.keys(obj).length) {
+      return deep
+        ? Object.values(obj).every(val => isUndefined(val) || val === null)
+        : false;
     }
-    return a;
-  }, {} as any);
+    return true;
+  }
 }
 
 export function parseTitleBy(rawData: any, key: 'artist' | 'song') {

@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "skipDefaultLibCheck": true,
+    "esModuleInterop": true,
     "module": "commonjs",
     "noImplicitReturns": true,
     "noUnusedLocals": true,
