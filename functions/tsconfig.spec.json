@@ -1,7 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "resolveJsonModule": true,
     "typeRoots": ["./node_modules/@types"],
     "types": [
       "jest",

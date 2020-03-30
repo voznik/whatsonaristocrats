@@ -1,7 +1,5 @@
 {
   "compilerOptions": {
-    "resolveJsonModule": true,
-    "skipDefaultLibCheck": true,
     "esModuleInterop": true,
     "module": "commonjs",
     "noImplicitReturns": true,
