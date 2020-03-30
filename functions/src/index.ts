@@ -3,7 +3,6 @@ import { dialogflow } from 'actions-on-google';
 
 import { Station } from './models';
 import { fetchAristocratsApi } from './services';
-import { getMessage } from './helpers';
 
 const WELCOME_INTENT = 'Default Welcome Intent';
 const STATION_INTENT = 'Station Number';
@@ -44,7 +43,7 @@ app.fallback(async conv => {
 
 async function handler(station = Station.Aristocrats) {
   const res = await fetchAristocratsApi(station);
-  const message = getMessage(res);
+  const message = res.getMessage();
   return message;
 }
 
