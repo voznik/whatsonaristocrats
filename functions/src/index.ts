@@ -6,8 +6,6 @@ import * as INTENT from './constants/intent';
 import { Station } from './models';
 import { fetchAristocratsApi } from './services';
 
-console.log('dirname', __dirname);
-
 i18n.configure({
   locales: ['en-US', 'ru-RU'],
   directory: `${__dirname}/locales`,
@@ -17,8 +15,9 @@ i18n.configure({
 const app = dialogflow({ debug: true });
 
 app.middleware(conv => {
-  if (conv.user && conv.user.locale) {
-    i18n.setLocale(conv.user.locale);
+  const locale = conv.user?.locale || conv.request.user?.locale;
+  if (locale) {
+    i18n.setLocale(locale);
   }
 });
 // The following example shows a simple catch error handler that sends the error to console output and sends back a simple string response to prompt the user via the conv.ask() function:
