@@ -10,7 +10,7 @@ before_script:
   - cd functions && npm ci
 script:
   - npm run lint
-  - npm run test:ci
+  # - npm run test:ci
   - cd ..
 after_success:
   - firebase deploy --force --only functions --token $FIREBASE_TOKEN

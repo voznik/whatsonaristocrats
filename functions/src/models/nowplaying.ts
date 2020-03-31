@@ -12,6 +12,10 @@ export class NowPlayingInfo {
     }
   }
 
+  getSearchString() {
+    return `${this.song}+${this.artist}`;
+  }
+
   getMessage() {
     // var example = i18n.__('%2$d then %1$s then %3$.2f', 'First', 2, 333.333);
     const message =

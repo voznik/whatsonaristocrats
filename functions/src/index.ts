@@ -3,7 +3,12 @@ import { dialogflow } from 'actions-on-google';
 import * as i18n from 'i18n';
 
 import * as INTENT from './constants/intent';
-import { Station } from './models';
+import {
+  Station,
+  NowPlayingInfo,
+  NowplayingCard,
+  LinkOpenMusic,
+} from './models';
 import { fetchAristocratsApi } from './services';
 
 i18n.configure({
@@ -15,9 +20,11 @@ i18n.configure({
 const app = dialogflow({ debug: true });
 
 app.middleware(conv => {
+  // IETF BCP-47 language code
   const locale = conv.user?.locale || conv.request.user?.locale;
   if (locale) {
     i18n.setLocale(locale);
+    console.log('DEBUG: current locale', i18n.getLocale());
   }
 });
 // The following example shows a simple catch error handler that sends the error to console output and sends back a simple string response to prompt the user via the conv.ask() function:
@@ -30,27 +37,38 @@ app.fallback(async conv => {
   // intent contains the name of the intent
   // you defined in the Intents area of Dialogflow
   const { intent, parameters } = conv;
-  let message;
+  // let message;
   switch (intent) {
-    case INTENT.WELCOME_INTENT:
-      message = await handler(parameters.station as Station);
-      conv.close(message);
+    case INTENT.WELCOME_INTENT: {
+      conv.ask(`Searching ...`);
+      const { message, query } = await handler(parameters.station as Station);
+      if (query) {
+        conv.ask(
+          new NowplayingCard(`Here's what's on the air:`, message, query)
+        );
+        conv.ask(new LinkOpenMusic('Music', query));
+      } else {
+        conv.close(message);
+      }
       break;
+    }
     case INTENT.STATION_INTENT:
-      message = await handler(parameters.station as Station);
-      conv.ask();
+      conv.ask(i18n.__('STATION'));
       break;
-    default:
-      message = await handler();
+    default: {
+      const { message } = await handler();
       conv.close(message);
+    }
   }
 });
 
 async function handler(station = Station.Aristocrats) {
-  const res = await fetchAristocratsApi(station);
-  const message = res.getMessage();
-  console.log('DEBUG: handler -> message', message);
-  return message;
+  const data = await fetchAristocratsApi(station);
+  const model = new NowPlayingInfo(data);
+  const message = model.getMessage();
+  const query = model.getSearchString();
+  // console.log('DEBUG: handler -> message', { message });
+  return { message, query };
 }
 
 // The entry point to handle a http request
