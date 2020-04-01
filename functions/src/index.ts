@@ -1,14 +1,9 @@
 import * as functions from 'firebase-functions';
-import { dialogflow } from 'actions-on-google';
+import { dialogflow, LinkOutSuggestion } from 'actions-on-google';
 import * as i18n from 'i18n';
 
 import * as INTENT from './constants/intent';
-import {
-  Station,
-  NowPlayingInfo,
-  NowplayingCard,
-  LinkOpenMusic,
-} from './models';
+import { Station, NowPlayingInfo } from './models';
 import { fetchAristocratsApi } from './services';
 
 i18n.configure({
@@ -37,16 +32,32 @@ app.fallback(async conv => {
   // intent contains the name of the intent
   // you defined in the Intents area of Dialogflow
   const { intent, parameters } = conv;
-  // let message;
   switch (intent) {
     case INTENT.WELCOME_INTENT: {
-      conv.ask(`Searching ...`);
       const { message, query } = await handler(parameters.station as Station);
       if (query) {
-        conv.ask(
-          new NowplayingCard(`Here's what's on the air:`, message, query)
-        );
-        conv.ask(new LinkOpenMusic('Music', query));
+        const ssml =
+          '<speak>' +
+          i18n.__('FOUND_TITLE') +
+          '<break time="1"/> ' +
+          message +
+          ' </speak>';
+        conv.ask(ssml);
+        if (conv.screen) {
+          conv.ask(
+            new LinkOutSuggestion({
+              name: 'Search this Song',
+              url: `https://google.com/search?q=${query}`,
+            })
+          );
+          conv.ask(
+            new LinkOutSuggestion({
+              name: 'Open Google Music',
+              url: `https://play.google.com/music/listen#/sr/${query}`,
+            })
+          );
+        }
+        conv.close();
       } else {
         conv.close(message);
       }
