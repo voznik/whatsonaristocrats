@@ -1,4 +1,3 @@
 // start:ng42.barrel
-export * from './fetch-api';
+export * from './station.factory';
 // end:ng42.barrel
-

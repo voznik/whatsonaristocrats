@@ -1,31 +1,58 @@
-import { Button, LinkOutSuggestion, BasicCard } from 'actions-on-google';
+import {
+  BasicCard,
+  LinkOutSuggestion,
+  GoogleActionsV2UiElementsLinkOutSuggestion,
+} from 'actions-on-google';
+import { NowPlayingInfo } from './nowplaying';
 
-export class SearchButton extends Button {
-  constructor(query: string) {
-    const url = `https://google.com/search?q=${query}`;
-    super({
-      title: 'Search this Song',
-      url,
-      // TODO:
-      /* action: {
-        androidApp: {
-          packageName: 'com.google.android.googlequicksearchbox',
-        },
-        url: `intent://google.com/search?q=${query}#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.WEB_SEARCH;end;`,
-      }, */
-    });
-  }
+// Spotify - intent://#Intent;launchFlags=0x10000000;component=com.spotify.music/.MainActivity;end
+// Google-YouTube - intent://#Intent;launchFlags=0x10000000;component=com.google.android.youtube;action=android.intent.action.ACTION_WEB_SEARCH;S.query=x;end
+// Google-Play-Music -  intent://#Intent;launchFlags=0x10000000;component=com.google.android.music;android.intent.action.ACTION_WEB_SEARCH;S.query=x;end
+
+enum LinkType {
+  Search,
+  Playmusic,
+  Youtube,
+  // Spotify,
 }
 
-export class LinkOpenMusic extends LinkOutSuggestion {
-  constructor(name: string, query: string) {
-    const url = `https://play.google.com/music/listen#/sr/${query}`;
-    super({ name, url });
+const LinkConfig = {
+  0: {
+    packageName: 'com.google.android.googlequicksearchbox',
+    url: `intent://#Intent;launchFlags=0x10000000;package=com.google.android.googlequicksearchbox;action=android.intent.action.ACTION_WEB_SEARCH;S.query=;end`,
+  },
+  1: {
+    packageName: 'com.google.android.music',
+    // url: `intent://search/#Intent;package=com.google.android.music;S.query=;end`,
+    url: `https://play.google.com/music/listen#/sr/S.query=;`,
+  },
+  2: {
+    packageName: 'com.google.android.youtube',
+    url: `intent://search/#Intent;scheme:https;package=com.google.android.youtube;S.query=;end`,
+  },
+};
+
+export class LinkOutSuggestionFull extends LinkOutSuggestion
+  implements GoogleActionsV2UiElementsLinkOutSuggestion {
+  // destinationName: string;
+  // openUrlAction: GoogleActionsV2UiElementsOpenUrlAction;
+
+  constructor(
+    options: { type: LinkType; name: string; info?: NowPlayingInfo },
+    query: string
+  ) {
+    super({ name: options.name, url: '' });
+    delete this.url;
+    this.destinationName = options.name;
     this.openUrlAction = {
       androidApp: {
-        packageName: 'com.google.android.music',
+        packageName: LinkConfig[options.type].packageName,
       },
-      url,
+      url: LinkConfig[options.type].url.replace(
+        'S.query=;',
+        // `S.query=${query};`
+        query
+      ),
     };
   }
 }
@@ -34,7 +61,9 @@ export class NowplayingCard extends BasicCard {
   constructor(title: string, message: string, query: string) {
     super({
       title,
-      buttons: [new SearchButton(query)],
+      buttons: [
+        new LinkOutSuggestionFull({ type: LinkType.Search, name: '' }, query),
+      ],
     });
     this.formattedText = message;
   }
