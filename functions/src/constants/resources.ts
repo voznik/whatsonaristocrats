@@ -9,8 +9,8 @@ export const RESOURCES = {
         'There is nothing playing at the moment. You can check again later. Thank you!',
       MESSAGE: "It's '{{song}}' by {{artist}}",
       OPEN_SEARCH: 'Search',
-      OPEN_PLAY_MUSIC: 'Open in Play Music',
-      OPEN_YOUTUBE: 'Open in Youtube',
+      OPEN_PLAY_MUSIC: 'Play Music',
+      OPEN_YOUTUBE: 'Youtube',
     },
   },
   'ru-RU': {
@@ -22,6 +22,7 @@ export const RESOURCES = {
       MESSAGE_EMPTY:
         'В данный момент ничего не играет. Вы можете проверить еще раз позже. Спасибо!',
       MESSAGE: "Это '{{song}}' {{artist}}",
+      OPEN_SEARCH: 'Искать',
     },
   },
 };

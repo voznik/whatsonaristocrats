@@ -10,7 +10,7 @@ import {
   RadioStation,
   RadioStationName,
   Station,
-  LinkOutSuggestionFull,
+  getBrowseItemsResponse,
 } from './models';
 import { StationFactory } from './services';
 
@@ -55,15 +55,11 @@ app.fallback(async (conv) => {
         })}</s><break time="1"/><s>${message}</s></p></speak>`;
         const text = `${i18next.t('FOUND_TITLE', { station })}${message}`;
         conv.ask(new SimpleResponse({ speech, text }));
-        if (conv.screen) {
-          // TODO: multiple links in response
-          // const responses = [ new LinkOutSuggestionFull( { type: 0, name: i18next.t('OPEN_SEARCH') }, query ), new LinkOutSuggestionFull( { type: 1, name: i18next.t('OPEN_PLAY_MUSIC') }, query ), new LinkOutSuggestionFull( { type: 2, name: i18next.t('OPEN_YOUTUBE') }, query ), ];
-          conv.ask(
-            new LinkOutSuggestionFull(
-              { type: 1, name: i18next.t('OPEN_PLAY_MUSIC') },
-              query
-            )
-          );
+        if (
+          conv.screen &&
+          conv.surface.capabilities.has('actions.capability.WEB_BROWSER')
+        ) {
+          conv.ask(getBrowseItemsResponse(query));
         }
         conv.close();
       } else {

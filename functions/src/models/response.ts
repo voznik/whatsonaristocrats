@@ -2,6 +2,8 @@ import {
   BasicCard,
   LinkOutSuggestion,
   GoogleActionsV2UiElementsLinkOutSuggestion,
+  BrowseCarousel,
+  BrowseCarouselItem,
 } from 'actions-on-google';
 import { NowPlayingInfo } from './nowplaying';
 
@@ -13,57 +15,90 @@ enum LinkType {
   Search,
   Playmusic,
   Youtube,
-  // Spotify,
+  YtMusic,
+  Spotify,
 }
 
 const LinkConfig = {
-  0: {
+  [LinkType.Search]: {
+    title: 'Google',
     packageName: 'com.google.android.googlequicksearchbox',
-    url: `intent://#Intent;launchFlags=0x10000000;package=com.google.android.googlequicksearchbox;action=android.intent.action.ACTION_WEB_SEARCH;S.query=;end`,
+    // url: `intent://#Intent;launchFlags=0x10000000;package=com.google.android.googlequicksearchbox;action=android.intent.action.ACTION_WEB_SEARCH;S.query=;end`,
+    url: `https://google.com/search?q=`,
   },
-  1: {
+  [LinkType.Playmusic]: {
+    title: 'Play Music',
     packageName: 'com.google.android.music',
     // url: `intent://search/#Intent;package=com.google.android.music;S.query=;end`,
-    url: `https://play.google.com/music/listen#/sr/S.query=;`,
+    // url: `http://intent//play.google.com/music/m/T7aif5jqjiz6ivlh26frrmbukt4?signup_if_needed=1&play=1#Intent;scheme=http;package=com.google.android.music;S.android.intent.extra.REFERRER_NAME=https%3A%2F%2Fwww.google.com;end`, // INFO: from search on android
+    url: `https://play.google.com/music/listen#/sr/`,
   },
-  2: {
+  [LinkType.Youtube]: {
+    title: 'Youtube',
     packageName: 'com.google.android.youtube',
-    url: `intent://search/#Intent;scheme:https;package=com.google.android.youtube;S.query=;end`,
+    // url: `intent://search/#Intent;scheme:https;package=com.google.android.youtube;S.query=;end`,
+    url: `https://music.youtube.com/search?q=`,
+  },
+  [LinkType.YtMusic]: {
+    title: 'Youtube Music',
+    packageName: 'com.google.android.youtube',
+    url: `https://music.youtube.com/search?q=`,
+  },
+  [LinkType.Spotify]: {
+    title: 'Spotify',
+    packageName: 'com.google.android.youtube',
+    url: `https://open.spotify.com/search/`,
   },
 };
 
+interface LinkOutSuggestionFullOptions {
+  type: LinkType;
+  title?: string;
+  info?: NowPlayingInfo;
+  query?: string;
+}
+
 export class LinkOutSuggestionFull extends LinkOutSuggestion
   implements GoogleActionsV2UiElementsLinkOutSuggestion {
-  // destinationName: string;
-  // openUrlAction: GoogleActionsV2UiElementsOpenUrlAction;
-
-  constructor(
-    options: { type: LinkType; name: string; info?: NowPlayingInfo },
-    query: string
-  ) {
-    super({ name: options.name, url: '' });
-    delete this.url;
-    this.destinationName = options.name;
+  constructor(options: LinkOutSuggestionFullOptions = { type: 0, query: '' }) {
+    super({
+      name: options.title || LinkConfig[options.type].title,
+      url: LinkConfig[options.type].url.concat(options.query || ''),
+    });
+    this.destinationName = options.title;
     this.openUrlAction = {
       androidApp: {
         packageName: LinkConfig[options.type].packageName,
       },
       url: LinkConfig[options.type].url.replace(
-        'S.query=;',
-        // `S.query=${query};`
-        query
+        'S.query=',
+        // `S.query=${query}`
+        options.query || ''
       ),
     };
   }
+}
+
+// tslint:disable: prefer-const triple-equals
+/**
+ * @tutorial https://developers.google.com/assistant/conversational/rich-responses#asdk-node-browse-carousel
+ * @param query string
+ */
+export function getBrowseItemsResponse(query: string) {
+  const items = [];
+  for (const key in LinkConfig) {
+    let { title, url } = LinkConfig[(key as unknown) as LinkType];
+    url = url.concat(query);
+    items.push(new BrowseCarouselItem({ title, url }));
+  }
+  return new BrowseCarousel({ items });
 }
 
 export class NowplayingCard extends BasicCard {
   constructor(title: string, message: string, query: string) {
     super({
       title,
-      buttons: [
-        new LinkOutSuggestionFull({ type: LinkType.Search, name: '' }, query),
-      ],
+      buttons: [new LinkOutSuggestionFull({ type: LinkType.Search, query })],
     });
     this.formattedText = message;
   }
