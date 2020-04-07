@@ -1,5 +1,5 @@
 // tslint:disable: no-floating-promises
-import { dialogflow, Suggestions } from 'actions-on-google';
+import { dialogflow, Suggestions, SimpleResponse } from 'actions-on-google';
 import * as functions from 'firebase-functions';
 import i18next from 'i18next';
 
@@ -50,10 +50,11 @@ app.fallback(async (conv) => {
         parameters.station as RadioStationName
       );
       if (query) {
-        ssml = `<speak><p><s>${i18next.t('FOUND_TITLE', {
+        const speech = `<speak><p><s>${i18next.t('FOUND_TITLE', {
           station,
         })}</s><break time="1"/><s>${message}</s></p></speak>`;
-        conv.ask(ssml);
+        const text = `${i18next.t('FOUND_TITLE', { station })}${message}`;
+        conv.ask(new SimpleResponse({ speech, text }));
         if (conv.screen) {
           // TODO: multiple links in response
           // const responses = [ new LinkOutSuggestionFull( { type: 0, name: i18next.t('OPEN_SEARCH') }, query ), new LinkOutSuggestionFull( { type: 1, name: i18next.t('OPEN_PLAY_MUSIC') }, query ), new LinkOutSuggestionFull( { type: 2, name: i18next.t('OPEN_YOUTUBE') }, query ), ];
