@@ -99,6 +99,7 @@ app.fallback(async (conv) => {
     case INTENT.STATION_SAVE:
       {
         if (conv.user.verification === 'VERIFIED') {
+          // eslint-disable-next-line
           (conv.user as any).storage.favoriteStation = station;
           conv.ask(`Alright, I'll remember that you like ${station}. See you!`);
         } else {

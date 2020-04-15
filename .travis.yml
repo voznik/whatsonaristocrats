@@ -9,7 +9,7 @@ before_script:
   - yarn global add firebase-tools
   - cd functions && yarn install
 script:
-  # - yarn lint
+  - yarn lint
   # - yarn test:ci
   - cd ..
   - yarn docs:build # npm run docs:build
