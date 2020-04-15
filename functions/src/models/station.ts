@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import i18next from 'i18next';
 import fetch from 'node-fetch';
 import { isEmptyString } from '../helpers';

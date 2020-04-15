@@ -3,7 +3,11 @@
   "workbench.colorCustomizations": {
     "statusBar.background": "#a70a3f",
     "statusBarItem.hoverBackground": "#d70d51",
-    "statusBar.foreground": "#e7e7e7"
+    "statusBar.foreground": "#e7e7e7",
+    "statusBar.border": "#a70a3f"
   },
   "peacock.color": "#a70a3f",
+  // "eslint.runtime": "./functions/node_modules/eslint/lib",
+  "eslint.workingDirectories": [ "./functions"],
+  "eslint.debug": true
 }

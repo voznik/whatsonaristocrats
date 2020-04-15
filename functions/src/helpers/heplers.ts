@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NowPlayingInfo } from '../models';
 
 export function isUndefined(value: any) {
@@ -46,7 +48,7 @@ export function isEmptyObject(obj: any, deep = false) {
   } else {
     if (Object.keys(obj).length) {
       return deep
-        ? Object.values(obj).every(val => isUndefined(val) || val === null)
+        ? Object.values(obj).every((val) => isUndefined(val) || val === null)
         : false;
     }
     return true;

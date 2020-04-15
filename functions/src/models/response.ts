@@ -4,6 +4,7 @@ import {
   GoogleActionsV2UiElementsLinkOutSuggestion,
   BrowseCarousel,
   BrowseCarouselItem,
+  Image,
 } from 'actions-on-google';
 import { NowPlayingInfo } from './nowplaying';
 
@@ -15,19 +16,23 @@ enum LinkType {
   Search,
   Playmusic,
   Youtube,
-  YtMusic,
+  Deezer,
   Spotify,
 }
 
 const LinkConfig = {
   [LinkType.Search]: {
     title: 'Google',
+    logo:
+      'https://storage.googleapis.com/actionsresources/logo_assistant_2x_64dp.png',
     packageName: 'com.google.android.googlequicksearchbox',
     // url: `intent://#Intent;launchFlags=0x10000000;package=com.google.android.googlequicksearchbox;action=android.intent.action.ACTION_WEB_SEARCH;S.query=;end`,
     url: `https://google.com/search?q=`,
   },
   [LinkType.Playmusic]: {
     title: 'Play Music',
+    logo:
+      'https://images.shazam.com/static/icons/feed/android/v4/listen_googleplaymusic.png',
     packageName: 'com.google.android.music',
     // url: `intent://search/#Intent;package=com.google.android.music;S.query=;end`,
     // url: `http://intent//play.google.com/music/m/T7aif5jqjiz6ivlh26frrmbukt4?signup_if_needed=1&play=1#Intent;scheme=http;package=com.google.android.music;S.android.intent.extra.REFERRER_NAME=https%3A%2F%2Fwww.google.com;end`, // INFO: from search on android
@@ -35,17 +40,23 @@ const LinkConfig = {
   },
   [LinkType.Youtube]: {
     title: 'Youtube',
+    logo:
+      'https://images.shazam.com/static/icons/feed/android/v4/listen_deezer.png',
     packageName: 'com.google.android.youtube',
     // url: `intent://search/#Intent;scheme:https;package=com.google.android.youtube;S.query=;end`,
     url: `https://music.youtube.com/search?q=`,
   },
-  [LinkType.YtMusic]: {
-    title: 'Youtube Music',
-    packageName: 'com.google.android.youtube',
-    url: `https://music.youtube.com/search?q=`,
+  [LinkType.Deezer]: {
+    title: 'Deezer',
+    logo:
+      'https://images.shazam.com/static/icons/feed/android/v4/listen_deezer.png',
+    packageName: 'com.google.android.deezer',
+    url: `https://deezer.com/search?q=`,
   },
   [LinkType.Spotify]: {
     title: 'Spotify',
+    logo:
+      'https://images.shazam.com/static/icons/feed/android/v4/listen_spotify.png',
     packageName: 'com.google.android.youtube',
     url: `https://open.spotify.com/search/`,
   },
@@ -87,9 +98,14 @@ export class LinkOutSuggestionFull extends LinkOutSuggestion
 export function getBrowseItemsResponse(query: string) {
   const items = [];
   for (const key in LinkConfig) {
-    let { title, url } = LinkConfig[(key as unknown) as LinkType];
+    // eslint-disable-next-line
+    let { title, url, logo } = LinkConfig[(key as unknown) as LinkType];
     url = url.concat(query);
-    items.push(new BrowseCarouselItem({ title, url }));
+    const image = new Image({
+      url: logo,
+      alt: title,
+    });
+    items.push(new BrowseCarouselItem({ title, url, image }));
   }
   return new BrowseCarousel({ items });
 }

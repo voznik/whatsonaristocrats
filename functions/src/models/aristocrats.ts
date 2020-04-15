@@ -15,6 +15,7 @@ export class AristoctratsStation extends Station {
     super(channels);
   }
 
+  // eslint-disable-next-line
   async parseData(data: any) {
     const info = {} as NowPlayingInfo;
     if (data) {

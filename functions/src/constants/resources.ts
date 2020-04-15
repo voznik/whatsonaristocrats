@@ -4,7 +4,7 @@ export const RESOURCES = {
       WELCOME_BASIC: 'Hello, welcome!',
       ERROR: 'I encountered a glitch. Can you say that again?',
       STATION: 'What station are you listening?',
-      FOUND_TITLE: "Here's what's on {{station}}: ",
+      FOUND_TITLE: "Here's what's on $station: ",
       MESSAGE_EMPTY:
         'There is nothing playing at the moment. You can check again later. Thank you!',
       MESSAGE: "It's '{{song}}' by {{artist}}",

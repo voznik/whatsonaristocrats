@@ -1,0 +1,40 @@
+{
+  "name": "whatsonaristocrats",
+  "version": "1.0.0",
+  "description": "<!-- https://github.com/actions-on-google/dialogflow-webhook-boilerplate-nodejs/blob/master/README.md -->",
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {
+    "vuepress": "^1.4.0"
+  },
+  "devDependencies": {
+    "husky": "^4.2.5",
+    "lint-staged": "^10.1.3",
+    "prettier": "^2.0.4",
+    "prettier-eslint": "^9.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/voznik/whatsonaristocrats/issues"
+  },
+  "homepage": "https://voznik.github.io/whatsonaristocrats"
+}
