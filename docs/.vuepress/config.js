@@ -1,5 +1,5 @@
 module.exports = {
-  // base: '/whatsonaristocrats/',
+  base: '/whatsonaristocrats/',
   // https://github.com/vuejs/vuepress/issues/790#issuecomment-418107492
   head: [
     ['link', { rel: 'icon', href: `/logo.png` }],
