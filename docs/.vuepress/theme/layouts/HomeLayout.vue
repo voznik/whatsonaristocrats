@@ -1,13 +1,16 @@
 <template>
   <ParentLayout>
-    <!-- <Foo #foo/> -->
+    <template #page-bottom>
+      XXX
+    </template>
   </ParentLayout>
 </template>
 
 <script>
 import ParentLayout from '@parent-theme/layouts/Layout.vue'
+import Home from '@parent-theme/components/Home.vue'
 
-console.log('DEBUG: ParentLayout', ParentLayout);
+// console.log('DEBUG: Home', Home);
 
 export default {
   components: {
